@@ -1,0 +1,10 @@
+defaultTasks 'clean', 'test', 'build', 'publishToMavenLocal'
+
+apply from: 'https://raw2.github.com/core9/core9.github.io/master/gradle/plugin.gradle'
+
+dependencies {
+
+	compile 'io.core9:plugin-static-handler-api:+'
+	//compile 'io.core9:plugin-static-handler-impl:+'
+	compile 'io.core9:plugin-widgets-api:+'
+}
