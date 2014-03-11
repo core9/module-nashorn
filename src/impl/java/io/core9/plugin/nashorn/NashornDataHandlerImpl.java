@@ -16,29 +16,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
+
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.annotations.injections.InjectPlugin;
 
 @PluginImplementation
 public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHandlerConfig> {
-	
+
 	@InjectPlugin
 	private AdminConfigRepository configRepository;
 
 	@InjectPlugin
 	private SessionManager sessionManager;
-	
+
 	@InjectPlugin
 	private VertxServer server;
-	
+
 	@InjectPlugin
 	private StaticHandler handler;
-	
+
 	@Override
 	public String getName() {
 		return "Nashorn";
 	}
-	
+
 	@Override
 	public Class<? extends DataHandlerFactoryConfig> getConfigClass() {
 		return NashornDataHandlerConfig.class;
@@ -53,30 +57,53 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 
 			@Override
 			public Map<String, Object> handle(Request req) {
-				
-				//FIXME session in the menu widget is a quick fix for proper sessions need to be removed
+
+				// FIXME session in the menu widget is a quick fix for proper
+				// sessions need to be removed
 				@SuppressWarnings("unused")
-                Session session = sessionManager.getVertxSession(req, server);
-				
-				Map<String,Object> result = new HashMap<String,Object>();
+				Session session = sessionManager.getVertxSession(req, server);
+
+				Map<String, Object> result = new HashMap<String, Object>();
 				Map<String, Object> nashorn = configRepository.readConfig(req.getVirtualHost(), ((NashornDataHandlerConfig) options).getNashornID(req));
-				if(nashorn == null) {
-					nashorn = new HashMap<String,Object>();
+				if (nashorn == null) {
+					nashorn = new HashMap<String, Object>();
 					String id = ((NashornDataHandlerConfig) options).getNashornID(req);
 					try {
-	                    tmp = handler.getStaticFile(id);
-	                    
-                    } catch (IOException e) {
-	                    // TODO Auto-generated catch block
-	                    e.printStackTrace();
-                    }
-					
-					 try {
-	                   js = new Scanner( tmp).useDelimiter("\\A").next();
-                    } catch (FileNotFoundException e) {
-	                    // TODO Auto-generated catch block
-	                    e.printStackTrace();
-                    }
+						tmp = handler.getStaticFile(id);
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					try {
+						js = new Scanner(tmp).useDelimiter("\\A").next();
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+					// secure
+					ScriptEngine sengine = factory.getScriptEngine(new String[] { "--no-java" });
+
+					if (js != null) {
+						try {
+	                        sengine.eval(js);
+                        } catch (ScriptException e) {
+	                        // TODO Auto-generated catch block
+	                        e.printStackTrace();
+                        }
+					    try {
+	                        System.out.println(sengine.eval("sum(1, 2);"));
+                        } catch (ScriptException e) {
+	                        // TODO Auto-generated catch block
+	                        e.printStackTrace();
+                        }
+						
+					} else {
+						System.out.println("Java: JavaScript not found!");
+					}
 					
 					nashorn.put("nnn", js);
 				}
