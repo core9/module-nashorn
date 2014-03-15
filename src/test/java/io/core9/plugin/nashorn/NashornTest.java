@@ -29,6 +29,7 @@ public class NashornTest {
 
 			if (js != null) {
 				engine.eval(js);
+
 				sengine.eval("var ph = 100;");
 				sengine.eval(js2);
 			    System.out.println(sengine.eval("sum2(1, 2);"));
