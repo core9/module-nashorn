@@ -54,6 +54,7 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 
 			private File tmp;
 			private String js;
+			private Object data;
 
 			@Override
 			public Map<String, Object> handle(Request req) {
@@ -95,7 +96,8 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 	                        e.printStackTrace();
                         }
 					    try {
-	                        System.out.println(sengine.eval("sum(1, 2);"));
+					    	data = sengine.eval("sum(1, 2);");
+	                        System.out.println(data);
                         } catch (ScriptException e) {
 	                        // TODO Auto-generated catch block
 	                        e.printStackTrace();
@@ -105,7 +107,7 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 						System.out.println("Java: JavaScript not found!");
 					}
 					
-					nashorn.put("nnn", js);
+					nashorn.put("nnn", js + data);
 				}
 				result.put("nashorn", nashorn);
 				return result;
