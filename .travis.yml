@@ -1,6 +1,8 @@
 language: java
 jdk:
-- oraclejdk8
+  - oraclejdk8
+script: 
+  - "./gradlew clean test build"
 env:
   global:
   - secure: UsfVfh3XEx5oC+XOQCVVfnw8fLAP/HvI2bVo2GawP8eZ80AT4D4ZAk9Yj1/C7LOfvgfSIO9H/j9x3983dZPLKQ/z9CRTrBLFLvyEyiCnUTHmqGoSEjsXalR1TlB7B8T0YMnMj0H2L6iRA105rM3NqTCBgFz/kPMOmWV5Kk0ORFM=
