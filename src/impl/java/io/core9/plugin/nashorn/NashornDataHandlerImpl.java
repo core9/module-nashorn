@@ -1,25 +1,24 @@
 package io.core9.plugin.nashorn;
 
 import io.core9.plugin.admin.plugins.AdminConfigRepository;
+import io.core9.plugin.filesmanager.FileRepository;
 import io.core9.plugin.server.request.Request;
 import io.core9.plugin.server.vertx.VertxServer;
-import io.core9.plugin.session.Session;
-import io.core9.plugin.session.SessionManager;
-import io.core9.plugin.statichandler.StaticHandler;
 import io.core9.plugin.widgets.datahandler.DataHandler;
 import io.core9.plugin.widgets.datahandler.DataHandlerFactoryConfig;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+
+import com.google.common.io.ByteStreams;
+
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.annotations.injections.InjectPlugin;
 
@@ -29,14 +28,13 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 	@InjectPlugin
 	private AdminConfigRepository configRepository;
 
-	@InjectPlugin
-	private SessionManager sessionManager;
+
 
 	@InjectPlugin
 	private VertxServer server;
 
 	@InjectPlugin
-	private StaticHandler handler;
+	private FileRepository repository;
 
 	@Override
 	public String getName() {
@@ -52,38 +50,42 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 	public DataHandler<NashornDataHandlerConfig> createDataHandler(final DataHandlerFactoryConfig options) {
 		return new DataHandler<NashornDataHandlerConfig>() {
 
-			private File tmp;
-			private String js;
+/*			private File tmp;
+			
+			*/
 			private Object data;
+			private String js;
 
 			@Override
 			public Map<String, Object> handle(Request req) {
 
-				// FIXME session in the menu widget is a quick fix for proper
-				// sessions need to be removed
-				@SuppressWarnings("unused")
-				Session session = sessionManager.getVertxSession(req, server);
+
 
 				Map<String, Object> result = new HashMap<String, Object>();
 				Map<String, Object> nashorn = configRepository.readConfig(req.getVirtualHost(), ((NashornDataHandlerConfig) options).getNashornID(req));
 				if (nashorn == null) {
 					nashorn = new HashMap<String, Object>();
 					String id = ((NashornDataHandlerConfig) options).getNashornID(req);
+				
+					Map<String,Object> file = repository.getFileContentsByName(req.getVirtualHost(), id);
+					
 					try {
-						tmp = handler.getStaticFile(id);
-
+						byte[] str = ByteStreams.toByteArray((InputStream) file.get("stream"));
+						
+						js = new String(str);
+						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
-					try {
+					/*try {
 						js = new Scanner(tmp).useDelimiter("\\A").next();
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
-
+					}*/
+	
 					NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
 					// secure
 					ScriptEngine sengine = factory.getScriptEngine(new String[] { "--no-java" });
@@ -96,7 +98,7 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 	                        e.printStackTrace();
                         }
 					    try {
-					    	data = sengine.eval("sum(1, 2);");
+					    	data = sengine.eval("response();");
 	                        System.out.println(data);
                         } catch (ScriptException e) {
 	                        // TODO Auto-generated catch block
@@ -107,7 +109,11 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 						System.out.println("Java: JavaScript not found!");
 					}
 					
-					nashorn.put("nnn", js + data);
+					nashorn.put("nashorn", js + data);
+					
+					
+					//nashorn.put("nashorn", "test");
+					
 				}
 				result.put("nashorn", nashorn);
 				return result;
