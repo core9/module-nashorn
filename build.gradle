@@ -22,8 +22,13 @@ task publishBintray (type: org._10ne.gradle.rest.RestTask, dependsOn: bintrayUpl
 dependencies {
 	apiCompile 'io.core9:core-api:+'
 	apiCompile 'io.core9:module-widgets-api:+'
-	
+	implCompile 'io.core9:module-database-mongodb-api:+'
+	implCompile 'net.minidev:json-smart:2.0-RC3'
 	implCompile 'com.google.guava:guava:15.0'
 	implCompile 'io.core9:module-files-manager-api:+'
+	implCompile 'org.jongo:jongo:1.0'
+	
+	testCompile 'com.github.fakemongo:fongo:1.4.0'
+	testCompile 'ch.qos.logback:logback-classic:1.1.1'
 	
 }
