@@ -27,6 +27,9 @@ dependencies {
 	implCompile 'com.google.guava:guava:15.0'
 	implCompile 'io.core9:module-files-manager-api:+'
 	implCompile 'org.jongo:jongo:1.0'
+	implCompile 'org.scala-lang:scala-library:2.11.0-M8'
+	implCompile 'org.mongodb:casbah-commons_2.10:2.7.0-RC3'
+	implCompile 'org.mongodb:casbah-core_2.10:2.7.0-RC3'
 	
 	testCompile 'com.github.fakemongo:fongo:1.4.0'
 	testCompile 'ch.qos.logback:logback-classic:1.1.1'

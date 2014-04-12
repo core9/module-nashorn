@@ -64,7 +64,7 @@ public class NashornDataHandlerImpl implements
 			private Object data;
 			private String js;
 			private Object request;
-			private Object execute;
+			@SuppressWarnings("unused")
 			private Object response;
 			private Object requestObject;
 			private Object reqObj;
