@@ -1,9 +1,10 @@
+/.gradle
+/.settings
 /build
-.gradle
-.gradle/*
-.settings
-bin
-.project
+/bin
 .classpath
+.project
+*.log
 *~
-jspf.cache
+/jspf.cache
+/data
