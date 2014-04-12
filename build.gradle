@@ -30,6 +30,7 @@ dependencies {
 	implCompile 'org.scala-lang:scala-library:2.11.0-M8'
 	implCompile 'org.mongodb:casbah-commons_2.10:2.7.0-RC3'
 	implCompile 'org.mongodb:casbah-core_2.10:2.7.0-RC3'
+	implCompile 'com.ee.mongo.util:mongo-shell-like-query:1.0.1'
 	
 	testCompile 'com.github.fakemongo:fongo:1.4.0'
 	testCompile 'ch.qos.logback:logback-classic:1.1.1'
