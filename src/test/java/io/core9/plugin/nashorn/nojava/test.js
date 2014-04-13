@@ -18,4 +18,13 @@ var databaseQueries = [
 
 
 var postDatabase = function() {
+
+	var arrayLength = databaseResults.length;
+	for (var i = 0; i < arrayLength; i++) {
+	    if(i == 0){
+	    	var res = databaseResults[i];
+	    	return res.Paul.name;
+	    }
+	}
+	return databaseResults;
 };

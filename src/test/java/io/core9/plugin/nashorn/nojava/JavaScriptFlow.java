@@ -25,11 +25,15 @@ public class JavaScriptFlow {
 		Invocable invocable = (Invocable) sengine;
 		sengine.eval("server = {'path':'/nashorn'}");
 		
-		Object result = invocable.invokeFunction("preDatabase", "java");
-		System.out.println(result);
+		Object preDatabase = invocable.invokeFunction("preDatabase", "java");
+		System.out.println(preDatabase);
 		
 		getDatabaseResults(sengine);
-
+		
+		sengine.eval("databaseResults = [{'Paul': {'name':'paul'}}]");
+		
+		Object postDatabase = invocable.invokeFunction("postDatabase", "java");
+		System.out.println(postDatabase);
 		
 	}
 
