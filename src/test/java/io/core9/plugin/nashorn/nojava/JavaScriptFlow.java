@@ -1,6 +1,9 @@
 package io.core9.plugin.nashorn.nojava;
 
 
+import java.util.Collection;
+import java.util.Set;
+
 import io.core9.plugin.nashorn.LoadFile;
 
 import javax.script.Invocable;
@@ -26,16 +29,32 @@ public class JavaScriptFlow {
 		sengine.eval("server = {'path':'/nashorn'}");
 		
 		Object result = invocable.invokeFunction("preDatabase", "java");
+		System.out.println(result);
 		
+		getDatabaseResults(sengine);
+
+		
+	}
+
+	private void getDatabaseResults(ScriptEngine sengine) {
 		Object json = sengine.get("databaseQueries");
 		JSObject jsonObjFromJS = (JSObject)json;
 
-		JSObject paul = (JSObject)jsonObjFromJS.getSlot(0);
+		Collection<Object> arr = jsonObjFromJS.values();
 		
-		Object obj = paul.getMember("Paul");
-
-		System.out.println(result + " query : " + obj);
-		
+		for (Object object : arr) {
+			
+			System.out.println(object);
+			JSObject obj = (JSObject) object;
+			System.out.println(obj);
+			
+			Set<String> test = obj.keySet();
+			for(String item :test){
+				System.out.println(item);
+			}
+			System.out.println(test);
+			
+		}
 	}
 
 }
