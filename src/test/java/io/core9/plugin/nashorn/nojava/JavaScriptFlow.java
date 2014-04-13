@@ -1,9 +1,6 @@
 package io.core9.plugin.nashorn.nojava;
 
 
-import java.util.Collection;
-import java.util.Set;
-
 import io.core9.plugin.nashorn.LoadFile;
 
 import javax.script.Invocable;
@@ -37,23 +34,13 @@ public class JavaScriptFlow {
 	}
 
 	private void getDatabaseResults(ScriptEngine sengine) {
-		Object json = sengine.get("databaseQueries");
-		JSObject jsonObjFromJS = (JSObject)json;
-
-		Collection<Object> arr = jsonObjFromJS.values();
-		
-		for (Object object : arr) {
-			
-			System.out.println(object);
-			JSObject obj = (JSObject) object;
-			System.out.println(obj);
-			
-			Set<String> test = obj.keySet();
-			for(String item :test){
+		for (Object object : ((JSObject)sengine.get("databaseQueries")).values()) {
+			JSObject obj = (JSObject) object;	
+			for(String item :obj.keySet()){
 				System.out.println(item);
+				System.out.println(obj.getMember(item));
 			}
-			System.out.println(test);
-			
+
 		}
 	}
 
