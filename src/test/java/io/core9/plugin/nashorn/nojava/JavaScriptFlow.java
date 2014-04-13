@@ -9,6 +9,8 @@ import javax.script.ScriptException;
 
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 import org.junit.Test;
 
@@ -30,7 +32,18 @@ public class JavaScriptFlow {
 		
 		getDatabaseResults(sengine);
 		
-		sengine.eval("databaseResults = [{'Paul': {'name':'paul'}}]");
+		JSONArray jsonRes = new JSONArray();
+		
+		JSONObject jsonObj = new JSONObject();
+		JSONObject paul = new JSONObject();
+		paul.put("name", "paul");
+		jsonObj.put("Paul", paul);
+		
+		jsonRes.add(jsonObj);
+		
+		
+		//sengine.eval("databaseResults = [{'Paul': {'name':'paul'}}]");
+		sengine.eval("databaseResults = " + jsonRes);
 		
 		Object postDatabase = invocable.invokeFunction("postDatabase", "java");
 		System.out.println(postDatabase);
