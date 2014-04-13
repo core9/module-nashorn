@@ -1,14 +1,14 @@
 package io.core9.plugin.nashorn.nojava;
 
-//import static org.junit.Assert.*;
+
 import io.core9.plugin.nashorn.LoadFile;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
+import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import org.junit.Test;
 
@@ -27,10 +27,14 @@ public class JavaScriptFlow {
 		
 		Object result = invocable.invokeFunction("preDatabase", "java");
 		
-		//Object result = sengine.eval("preDatabase()");
+		Object json = sengine.get("databaseQueries");
+		JSObject jsonObjFromJS = (JSObject)json;
 
+		JSObject paul = (JSObject)jsonObjFromJS.getSlot(0);
+		
+		Object obj = paul.getMember("Paul");
 
-		System.out.println(result);
+		System.out.println(result + " query : " + obj);
 		
 	}
 
