@@ -1,5 +1,5 @@
 
-var NashornTest = Java.type("io.core9.plugin.nashorn.NashornTest");
+var NashornTest = Java.type("io.core9.plugin.nashorn.sample.NashornTest");
 
 print("Javascript: " + NashornTest.calledByJavascript("Java wird von Javascript aufgerufen!"));
 
