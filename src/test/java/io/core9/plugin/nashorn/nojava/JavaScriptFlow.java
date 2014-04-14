@@ -25,40 +25,54 @@ public class JavaScriptFlow {
 		sengine.eval(LoadFile
 				.loadFile("src/test/java/io/core9/plugin/nashorn/nojava/test.js"));
 		Invocable invocable = (Invocable) sengine;
-		sengine.eval("server = {'path':'/nashorn'}");
-		
-		Object preDatabase = invocable.invokeFunction("preDatabase", "java");
+
+
+		JSONObject server = new JSONObject();
+		JSONObject request = new JSONObject();
+		request.put("path", "/nashorn");
+		server.put("request", request);
+
+		Object preDatabase = invocable.invokeFunction("preDatabaseFilter",
+				server);
 		System.out.println(preDatabase);
-		
-		getDatabaseResults(sengine);
-		
+
+		getDatabaseResults(sengine, invocable, preDatabase);
+
 		JSONArray jsonRes = new JSONArray();
-		
 		JSONObject jsonObj = new JSONObject();
 		JSONObject paul = new JSONObject();
 		paul.put("name", "paul");
-		jsonObj.put("Paul", paul); 
-		
+		jsonObj.put("Paul", paul);
 		jsonRes.add(jsonObj);
-		
-		
-		//sengine.eval("databaseResults = [{'Paul': {'name':'paul'}}]");
-		sengine.eval("databaseResults = " + jsonRes);
-		
-		Object postDatabase = invocable.invokeFunction("postDatabase", "java");
+
+		Object postDatabase = invocable.invokeFunction("postDatabaseFilter",
+				jsonRes);
 		System.out.println(postDatabase);
-		
+
 	}
 
-	private void getDatabaseResults(ScriptEngine sengine) {
-		for (Object object : ((JSObject)sengine.get("databaseQueries")).values()) {
-			JSObject obj = (JSObject) object;	
-			for(String item :obj.keySet()){
+	private void getDatabaseResults(ScriptEngine sengine, Invocable invocable,
+			Object preDatabase) {
+
+		JSObject queries = null;
+		try {
+			queries = (JSObject) invocable.invokeFunction("databaseQueries",
+					preDatabase);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+
+		for (Object object : ((JSObject) queries).values()) {
+			JSObject obj = (JSObject) object;
+			for (String item : obj.keySet()) {
 				System.out.println(item);
 				System.out.println(obj.getMember(item));
 			}
 
 		}
+
 	}
 
 }
