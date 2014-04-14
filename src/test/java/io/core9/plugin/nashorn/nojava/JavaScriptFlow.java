@@ -27,10 +27,7 @@ public class JavaScriptFlow {
 		Invocable invocable = (Invocable) sengine;
 
 
-		JSONObject server = new JSONObject();
-		JSONObject request = new JSONObject();
-		request.put("path", "/nashorn");
-		server.put("request", request);
+		JSONObject server = getServerObject();
 
 		Object preDatabase = invocable.invokeFunction("preDatabaseFilter",
 				server);
@@ -49,6 +46,14 @@ public class JavaScriptFlow {
 				jsonRes);
 		System.out.println(postDatabase);
 
+	}
+
+	private JSONObject getServerObject() {
+		JSONObject server = new JSONObject();
+		JSONObject request = new JSONObject();
+		request.put("path", "/nashorn");
+		server.put("request", request);
+		return server;
 	}
 
 	private void getDatabaseResults(ScriptEngine sengine, Invocable invocable,
