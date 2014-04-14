@@ -1,13 +1,13 @@
-package io.core9.plugin.nashorn;
+package io.core9.plugin.nashorn.sample;
+
+import io.core9.plugin.nashorn.LoadFile;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
 
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
@@ -22,10 +22,10 @@ public class NashornTest {
 		ScriptEngine sengine = factory.getScriptEngine(new String[] { "--no-java" });
 
 		try {
-			String js = NashornTest.loadFile("src/test/java/io/core9/plugin/nashorn/NashornTest.js");
+			String js = LoadFile.loadFile("src/test/java/io/core9/plugin/nashorn/sample/NashornTest.js");
 			
 			// print needs io thus not working :-)
-			String js2 = NashornTest.loadFile("src/test/java/io/core9/plugin/nashorn/NashornTest2.js");
+			String js2 = LoadFile.loadFile("src/test/java/io/core9/plugin/nashorn/sample/NashornTest2.js");
 
 			if (js != null) {
 				engine.eval(js);
@@ -64,26 +64,5 @@ public class NashornTest {
 		return "Der Aufruf war erfolgreich!";
 	}
 
-	private static String loadFile(String path) {
-		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
-			String line = "";
-			StringBuffer sb = new StringBuffer();
-
-			do {
-				line = bufferedReader.readLine();
-				if (line != null && !line.isEmpty()) {
-					sb.append(line + System.getProperty("line.separator"));
-				}
-			} while (line != null);
-
-			bufferedReader.close();
-
-			return sb.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 }

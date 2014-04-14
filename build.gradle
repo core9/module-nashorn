@@ -1,10 +1,38 @@
-defaultTasks 'clean', 'test', 'build', 'publishToMavenLocal'
+// Core9 Framework: module-widgets
+// Build with: ./gradlew clean test build
+// Publish with  ./gradlew clean test build publish publishBintray
 
-apply from: 'https://raw2.github.com/core9/core9.github.io/master/gradle/travisplugin.gradle'
+apply from: 'http://www.core9.io/buildfiles/gradle/source.gradle'
+apply from: 'http://www.core9.io/buildfiles/gradle/publish.gradle'
+
+buildscript {
+	apply from: 'http://www.core9.io/buildfiles/gradle/publish-build.gradle'
+}
+
+/**
+ * @TODO Somehow cannot be moved to publish.gradle
+ */
+task publishBintray (type: org._10ne.gradle.rest.RestTask, dependsOn: bintrayUpload) {
+    httpMethod = 'post'
+    uri = 'https://bintray.com/api/v1/content/core9/core9/' + project.name + '/' + project.version + '/publish'
+    username = System.env.BINTRAY_USER
+    password = System.env.BINTRAY_KEY
+}
 
 dependencies {
-
-	compile 'io.core9:plugin-static-handler-api:+'
-	//compile 'io.core9:plugin-static-handler-impl:+'
-	compile 'io.core9:plugin-widgets-api:+'
+	apiCompile 'io.core9:core-api:+'
+	apiCompile 'io.core9:module-widgets-api:+'
+	implCompile 'io.core9:module-database-mongodb-api:+'
+	implCompile 'net.minidev:json-smart:2.0-RC3'
+	implCompile 'com.google.guava:guava:15.0'
+	implCompile 'io.core9:module-files-manager-api:+'
+	implCompile 'org.jongo:jongo:1.0'
+	implCompile 'org.scala-lang:scala-library:2.11.0-M8'
+	implCompile 'org.mongodb:casbah-commons_2.10:2.7.0-RC3'
+	implCompile 'org.mongodb:casbah-core_2.10:2.7.0-RC3'
+	implCompile 'com.ee.mongo.util:mongo-shell-like-query:1.0.1'
+	
+	testCompile 'com.github.fakemongo:fongo:1.4.0'
+	testCompile 'ch.qos.logback:logback-classic:1.1.1'
+	
 }

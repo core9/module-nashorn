@@ -1,47 +1,60 @@
 package io.core9.plugin.nashorn;
 
 import io.core9.plugin.admin.plugins.AdminConfigRepository;
+import io.core9.plugin.database.mongodb.MongoDatabase;
+import io.core9.plugin.filesmanager.FileRepository;
+import io.core9.plugin.server.VirtualHost;
 import io.core9.plugin.server.request.Request;
 import io.core9.plugin.server.vertx.VertxServer;
-import io.core9.plugin.session.Session;
-import io.core9.plugin.session.SessionManager;
-import io.core9.plugin.statichandler.StaticHandler;
 import io.core9.plugin.widgets.datahandler.DataHandler;
 import io.core9.plugin.widgets.datahandler.DataHandlerFactoryConfig;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+
+import com.ee.dynamicmongoquery.MongoQuery;
+import com.ee.dynamicmongoquery.MongoQueryParser;
+import com.google.common.io.ByteStreams;
+import com.mongodb.BasicDBList;
+import com.mongodb.DB;
+
+/*import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;*/
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.annotations.injections.InjectPlugin;
 
 @PluginImplementation
-public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHandlerConfig> {
+public class NashornDataHandlerImpl implements
+		NashornDataHandler<NashornDataHandlerConfig> {
 
 	@InjectPlugin
 	private AdminConfigRepository configRepository;
 
 	@InjectPlugin
-	private SessionManager sessionManager;
-
-	@InjectPlugin
 	private VertxServer server;
+	
+	@InjectPlugin
+	private MongoDatabase database;
 
 	@InjectPlugin
-	private StaticHandler handler;
+	private FileRepository repository;
 
 	@Override
 	public String getName() {
 		return "Nashorn";
 	}
+
+	private NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+	// secure
+	private ScriptEngine sengine = factory
+			.getScriptEngine(new String[] { "--no-java" });
 
 	@Override
 	public Class<? extends DataHandlerFactoryConfig> getConfigClass() {
@@ -49,65 +62,88 @@ public class NashornDataHandlerImpl implements NashornDataHandler<NashornDataHan
 	}
 
 	@Override
-	public DataHandler<NashornDataHandlerConfig> createDataHandler(final DataHandlerFactoryConfig options) {
+	public DataHandler<NashornDataHandlerConfig> createDataHandler(
+			final DataHandlerFactoryConfig options) {
 		return new DataHandler<NashornDataHandlerConfig>() {
 
-			private File tmp;
-			private String js;
 			private Object data;
+			private String js;
+			@SuppressWarnings("unused")
+			private Object response;
+			private String db;
+			private String jsQuery;
 
 			@Override
 			public Map<String, Object> handle(Request req) {
 
-				// FIXME session in the menu widget is a quick fix for proper
-				// sessions need to be removed
-				@SuppressWarnings("unused")
-				Session session = sessionManager.getVertxSession(req, server);
-
 				Map<String, Object> result = new HashMap<String, Object>();
-				Map<String, Object> nashorn = configRepository.readConfig(req.getVirtualHost(), ((NashornDataHandlerConfig) options).getNashornID(req));
+				Map<String, Object> nashorn = configRepository.readConfig(
+						req.getVirtualHost(),
+						((NashornDataHandlerConfig) options).getNashornID(req));
 				if (nashorn == null) {
 					nashorn = new HashMap<String, Object>();
-					String id = ((NashornDataHandlerConfig) options).getNashornID(req);
-					try {
-						tmp = handler.getStaticFile(id);
+					String id = ((NashornDataHandlerConfig) options)
+							.getNashornID(req);
 
+					Map<String, Object> file = repository
+							.getFileContentsByName(req.getVirtualHost(), id);
+
+					try {
+						js = new String(
+								ByteStreams.toByteArray((InputStream) file
+										.get("stream")));
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
 					try {
-						js = new Scanner(tmp).useDelimiter("\\A").next();
-					} catch (FileNotFoundException e) {
+						sengine.eval(js);
+					} catch (ScriptException e) {
+						e.printStackTrace();
+					}
+					VirtualHost vhost = req.getVirtualHost();
+					db = (String) vhost.getContext("database");
+					//String coll = (String) vhost.getContext("prefix") + "articles";
+					
+					DB rawDb = database.getDb(db);
+
+					MongoQueryParser parser = new MongoQueryParser();
+
+					
+					try {
+						jsQuery = (String)sengine.eval("query");
+					} catch (ScriptException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
-					NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-					// secure
-					ScriptEngine sengine = factory.getScriptEngine(new String[] { "--no-java" });
-
-					if (js != null) {
-						try {
-	                        sengine.eval(js);
-                        } catch (ScriptException e) {
-	                        // TODO Auto-generated catch block
-	                        e.printStackTrace();
-                        }
-					    try {
-					    	data = sengine.eval("sum(1, 2);");
-	                        System.out.println(data);
-                        } catch (ScriptException e) {
-	                        // TODO Auto-generated catch block
-	                        e.printStackTrace();
-                        }
-						
-					} else {
-						System.out.println("Java: JavaScript not found!");
-					}
+					//String query = "db.friends.find( { 'name' : 'John'} ).sort( { name: 1 } ).limit( 2 )";
+					MongoQuery mongoQuery = parser.parse(jsQuery, new HashMap<String, String>());
+					BasicDBList results = mongoQuery.execute(rawDb);
 					
-					nashorn.put("nnn", js + data);
+					String res = results.toString();
+					System.out.println(res);
+					/*
+					 reqObj = sengine.eval("reqObj");
+					JSONObject obj = (JSONObject) JSONValue
+							.parse((String) reqObj);
+
+					request = sengine.eval("request();");
+					
+
+					sengine.eval("request = ' " + request + " : someJson "
+							+ requestObject.toString() + " ';");
+
+					response = sengine.eval("response();");
+
+					data = obj + res;*/
+					
+					data = res;
+
+					System.out.println(data);
+
+					nashorn.put("nashorn", data);
+
 				}
 				result.put("nashorn", nashorn);
 				return result;
