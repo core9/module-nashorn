@@ -37,7 +37,7 @@ public class JavaScriptFlow {
 		JSONObject jsonObj = new JSONObject();
 		JSONObject paul = new JSONObject();
 		paul.put("name", "paul");
-		jsonObj.put("Paul", paul);
+		jsonObj.put("Paul", paul); 
 		
 		jsonRes.add(jsonObj);
 		
