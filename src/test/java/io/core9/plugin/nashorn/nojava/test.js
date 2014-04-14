@@ -1,11 +1,11 @@
 var preDatabaseFilter = function(server) {
-	return "greetings from javascript to " + server.request.path;
+	return server;
 };
 
 var databaseQueries = function(preDatabaseData) {
 	return {
-				"Paul" : "db.friends.find( { 'name' : 'Paul'} ).sort( { name: 1 } ).limit( 2 )",
-				"John" : "db.friends.find( { 'name' : 'John'} ).sort( { name: 1 } ).limit( 2 )"
+				"Paul" : "db.friends.find( { 'name' : 'Paul'}, { _id: 0 }  ).sort( { name: 1 } ).limit( 2 )",
+				"John" : "db.friends.find( { 'name' : 'John'}, { _id: 0 } ).sort( { name: 1 } ).limit( 2 )"
 			};
 };
 
