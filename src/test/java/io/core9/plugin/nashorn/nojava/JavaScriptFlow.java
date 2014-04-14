@@ -1,14 +1,17 @@
 package io.core9.plugin.nashorn.nojava;
 
 
+import java.util.Map.Entry;
+
 import io.core9.plugin.nashorn.LoadFile;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-import jdk.nashorn.api.scripting.JSObject;
+
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -56,12 +59,12 @@ public class JavaScriptFlow {
 		return server;
 	}
 
-	private void getDatabaseResults(ScriptEngine sengine, Invocable invocable,
+	private JSONObject getDatabaseResults(ScriptEngine sengine, Invocable invocable,
 			Object preDatabase) {
-
-		JSObject queries = null;
+		JSONObject jsonObject = new JSONObject();
+		ScriptObjectMirror queries = null;
 		try {
-			queries = (JSObject) invocable.invokeFunction("databaseQueries",
+			queries = (ScriptObjectMirror) invocable.invokeFunction("databaseQueries",
 					preDatabase);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
@@ -69,15 +72,12 @@ public class JavaScriptFlow {
 			e.printStackTrace();
 		}
 
-		for (Object object : ((JSObject) queries).values()) {
-			JSObject obj = (JSObject) object;
-			for (String item : obj.keySet()) {
-				System.out.println(item);
-				System.out.println(obj.getMember(item));
-			}
-
+		for (Entry<String, Object> object : queries.entrySet()) {
+			String key = object.getKey();
+			String value = (String)object.getValue();
+			System.out.println(key + " : " + value);
 		}
-
+		return jsonObject;
 	}
 
 }
