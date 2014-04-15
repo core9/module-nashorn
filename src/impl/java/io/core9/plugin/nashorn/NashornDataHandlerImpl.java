@@ -143,7 +143,7 @@ public class NashornDataHandlerImpl implements
 					e.printStackTrace();
 				}
 
-				for (Entry<String, Object> object : queries.entrySet()) {
+				for (Entry<String, Object> object : queries.entrySet()) { 
 					String key = object.getKey();
 					String value = (String) object.getValue();
 					System.out.println(key + " : " + value);
