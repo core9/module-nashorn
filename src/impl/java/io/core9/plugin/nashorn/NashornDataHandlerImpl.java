@@ -78,49 +78,46 @@ public class NashornDataHandlerImpl implements
 			@Override
 			public Map<String, Object> handle(Request req) {
 
-				Map<String, Object> nashorn = getScriptPath(options, req);
-				if (nashorn == null) {
-					nashorn = new HashMap<String, Object>();
-					Map<String, Object> file = getJsFile(options, req);
+				Map<String, Object> nashorn = new HashMap<String, Object>();
+				Map<String, Object> file = getJsFile(options, req);
 
-					getEngine(file);
+				getEngine(file);
 
-					Invocable invocable = (Invocable) sengine;
-					try {
-						Object preDatabase = invocable.invokeFunction(
-								"preDatabaseFilter", server);
-					} catch (NoSuchMethodException e) {
-						e.printStackTrace();
-					} catch (ScriptException e) {
-						e.printStackTrace();
-					}
-
-					JSONObject server = getServerObject();
-
-					try {
-						preDatabase = invocable.invokeFunction(
-								"preDatabaseFilter", server);
-					} catch (NoSuchMethodException e) {
-						e.printStackTrace();
-					} catch (ScriptException e) {
-						e.printStackTrace();
-					}
-
-					JSONObject dbResults = getDatabaseResults(req, sengine,
-							invocable, preDatabase);
-
-					try {
-						postDatabase = invocable.invokeFunction(
-								"postDatabaseFilter", dbResults);
-					} catch (NoSuchMethodException e) {
-						e.printStackTrace();
-					} catch (ScriptException e) {
-						e.printStackTrace();
-					}
-
-					nashorn.put("nashorn", postDatabase);
-
+				Invocable invocable = (Invocable) sengine;
+				try {
+					Object preDatabase = invocable.invokeFunction(
+							"preDatabaseFilter", server);
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (ScriptException e) {
+					e.printStackTrace();
 				}
+
+				JSONObject server = getServerObject();
+
+				try {
+					preDatabase = invocable.invokeFunction(
+							"preDatabaseFilter", server);
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (ScriptException e) {
+					e.printStackTrace();
+				}
+
+				JSONObject dbResults = getDatabaseResults(req, sengine,
+						invocable, preDatabase);
+
+				try {
+					postDatabase = invocable.invokeFunction(
+							"postDatabaseFilter", dbResults);
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (ScriptException e) {
+					e.printStackTrace();
+				}
+
+				nashorn.put("nashorn", postDatabase);
+
 				result.put("nashorn", nashorn);
 				return result;
 			}
@@ -182,20 +179,7 @@ public class NashornDataHandlerImpl implements
 
 			private Map<String, Object> getJsFile(
 					final DataHandlerFactoryConfig options, Request req) {
-				String id = ((NashornDataHandlerConfig) options)
-						.getNashornID(req);
-
-				Map<String, Object> file = repository.getFileContentsByName(
-						req.getVirtualHost(), id);
-				return file;
-			}
-
-			private Map<String, Object> getScriptPath(
-					final DataHandlerFactoryConfig options, Request req) {
-				Map<String, Object> nashorn = configRepository.readConfig(
-						req.getVirtualHost(),
-						((NashornDataHandlerConfig) options).getNashornID(req));
-				return nashorn;
+				return repository.getFileContentsByName(req.getVirtualHost(), getOptions().getJsFile().substring(7));
 			}
 
 			@Override
