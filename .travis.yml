@@ -1,8 +1,10 @@
 language: java
+jdk:
+  - oraclejdk8
 env:
   global:
-    - TERM=dumb
     - secure: "CvKtIyjSHbNzZBWN3vD25sdc0zpYCY4BRjFgHZCw6+CyJ0cNKM+CN9MFx6A820rbOWL//8I7yu8tWI2r6TdgKw+OJdo/hY0zAWsJWFyFauldDxkpKTDn7COEHFRX1aZu6Cm6ie43PSz+qKm55j1pq7kUc1vgYUJkgWy4xFk2SSc="
     - secure: "lO7jSUBuoOIL9OpTBJNkFm5vTZIlBthOw+nMcb5nT7Z7ni6FiNl4zlV48rkcFi572p2k1LFbGcADKo01Zaw2/T2fScPVK5G6Dh7WhSMqCw1LwnlHFWKFJw2BCg6OIjVupOSGHRpdYKaVURYQJTAgUL2gTYwMC1NhP+QA/E7xhbQ="
+    - TERM=dumb
 install: 
   - "./gradlew clean test build publish publishBintray"
