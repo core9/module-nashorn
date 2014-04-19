@@ -4,7 +4,7 @@ jdk:
 env:
   global:
   - TERM=dumb
-  - secure: PUH13S6WprYWdPASedvP7CwSJv/bYU6+O3QVPGeNazMiaToeRkYl7oOrAB2xeWwsMK0w/rubqDAgetijiPdrsn5lGqQNPZEoU8xrdnc5AmqTSS+qJOmQBWvZOeB7qO7RhXhPliQOC/vbQ7CnM7YIHGzFcnw4mE08jXd8YmTOwxU=
-  - secure: J8FCPHtFHk6pL/nJcVSFECxxx4ldmJj3Xe7k+h/IWAQ4l0YFzlAeM/Rnrd7qifTEm9IpKb5nH8ldFf0Mv3Aqkk3RwtLmOudf356oVCnMEeK754HKwKB6ipuklIywO1zyug2eW2vB13gXsEGr7IWFjf/2Bz7T1aze1XQRIbxT/fY=
+  - secure: fq9zGxW6tWlPs7G7PqJUjOg6+zd4shOZxMyP6WfB5XsMALv30JW7HhexC6TF3YbxdzEaQpf9f+7vnCynXPUKWu9CHixlTfs3jiob2IBgjb3+JucNUBW7XClZEIUAihOu9NpBZGy9zv0Ng79PnkTRrpzzmBmDUbORuACnEomud18=
+  - secure: QZBKqgVv3mHq5eVSg0cR7mnj9wcSJxG+ChAqhf0nvOCR7+n+NR7d0SeIXQ5XC1cSosq8MyKcUFQYz7GrCf4DhnZ+4ZYgpTYat3bFGqzdcOWifP/j1k6k54yFje3tY4srpjp5bMB4jhxJvk2+NDScxw/lkhmaHI0RHr8V4DvMGNk=
 install:
 - ./gradlew clean test build publish publishBintray
