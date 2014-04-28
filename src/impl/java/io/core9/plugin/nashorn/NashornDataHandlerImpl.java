@@ -88,20 +88,20 @@ public class NashornDataHandlerImpl implements
 					Object preDatabase = invocable.invokeFunction(
 							"preDatabaseFilter", server);
 				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				} catch (ScriptException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 
 				JSONObject server = getServerObject();
 
 				try {
-					preDatabase = invocable.invokeFunction(
-							"preDatabaseFilter", server);
+					preDatabase = invocable.invokeFunction("preDatabaseFilter",
+							server);
 				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				} catch (ScriptException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 
 				JSONObject dbResults = getDatabaseResults(req, sengine,
@@ -111,9 +111,9 @@ public class NashornDataHandlerImpl implements
 					postDatabase = invocable.invokeFunction(
 							"postDatabaseFilter", dbResults);
 				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				} catch (ScriptException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 
 				nashorn.put("nashorn", postDatabase);
@@ -134,23 +134,26 @@ public class NashornDataHandlerImpl implements
 				try {
 					queries = (ScriptObjectMirror) invocable.invokeFunction(
 							"databaseQueries", preDatabase);
+					if (queries != null) {
+						for (Entry<String, Object> object : queries.entrySet()) {
+							String key = object.getKey();
+							String value = (String) object.getValue();
+							System.out.println(key + " : " + value);
+
+							MongoQuery mongoQuery = parser.parse(value,
+									new HashMap<String, String>());
+							BasicDBList results = mongoQuery.execute(rawDb);
+
+							jsonObject.put(key, results);
+						}
+					}
 				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				} catch (ScriptException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 
-				for (Entry<String, Object> object : queries.entrySet()) { 
-					String key = object.getKey();
-					String value = (String) object.getValue();
-					System.out.println(key + " : " + value);
 
-					MongoQuery mongoQuery = parser.parse(value,
-							new HashMap<String, String>());
-					BasicDBList results = mongoQuery.execute(rawDb);
-
-					jsonObject.put(key, results);
-				}
 				return jsonObject;
 			}
 
@@ -179,7 +182,8 @@ public class NashornDataHandlerImpl implements
 
 			private Map<String, Object> getJsFile(
 					final DataHandlerFactoryConfig options, Request req) {
-				return repository.getFileContentsByName(req.getVirtualHost(), getOptions().getJsFile().substring(7));
+				return repository.getFileContentsByName(req.getVirtualHost(),
+						getOptions().getJsFile().substring(7));
 			}
 
 			@Override
