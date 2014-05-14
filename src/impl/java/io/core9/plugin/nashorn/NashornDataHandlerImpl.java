@@ -80,8 +80,8 @@ public class NashornDataHandlerImpl implements
 
 				Map<String, Object> nashorn = new HashMap<String, Object>();
 				Map<String, Object> file = getJsFile(options, req);
-
-				getEngine(file);
+				JSONObject server = getServerObject();
+				setEngine(file);
 
 				Invocable invocable = (Invocable) sengine;
 				try {
@@ -93,7 +93,7 @@ public class NashornDataHandlerImpl implements
 					//e.printStackTrace();
 				}
 
-				JSONObject server = getServerObject();
+
 
 				try {
 					preDatabase = invocable.invokeFunction("preDatabaseFilter",
@@ -165,7 +165,7 @@ public class NashornDataHandlerImpl implements
 				return server;
 			}
 
-			private void getEngine(Map<String, Object> file) {
+			private void setEngine(Map<String, Object> file) {
 				try {
 					js = new String(ByteStreams.toByteArray((InputStream) file
 							.get("stream")));
