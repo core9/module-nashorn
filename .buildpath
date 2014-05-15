@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path="src/api/java"/>
+	<buildpathentry kind="src" path="src/api/resources"/>
+	<buildpathentry kind="src" path="src/impl/java"/>
+	<buildpathentry kind="src" path="src/impl/resources"/>
+	<buildpathentry kind="src" path="src/test/java"/>
+	<buildpathentry kind="src" path="src/test/resources"/>
+	<buildpathentry kind="con" path="org.eclipse.dltk.mod.launching.INTERPRETER_CONTAINER"/>
+	<buildpathentry kind="con" path="org.eclipse.vjet.eclipse.core.JSNATIVE_CONTAINER/JS Native Types"/>
+	<buildpathentry kind="con" path="org.eclipse.vjet.eclipse.core.BROWSER_CONTAINER/Browser SDK"/>
+	<buildpathentry external="true" kind="lib" path="C:/Users/rcooke/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-compiler/2.10.2/64c8b1380cc53d6850823d6e4e7ae984aa44ef9c/scala-compiler-2.10.2.jar"/>
+</buildpath>
