@@ -7,7 +7,7 @@
 	"var" : [ 
 	{
 		"name" : "tmp",
-		"invoke" : "test",
+		"invoke" : "test5",
 		"arg" : "test"
 	}, {
 		"name" : "tmp3",
@@ -16,5 +16,6 @@
 	} ] 
 }
 **/
+
 
 
