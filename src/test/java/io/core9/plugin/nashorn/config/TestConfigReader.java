@@ -6,7 +6,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.script.Invocable;
@@ -24,6 +25,7 @@ public class TestConfigReader {
 	private NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
 	private ScriptEngine sengine = factory
 			.getScriptEngine(new String[] { "--no-java" });
+	private Map<String, Object>resultRegistry = new HashMap<>();
 
 	@Test
 	public void readConfig() {
@@ -66,8 +68,10 @@ public class TestConfigReader {
 		System.out.println(vars);
 		String name = "";
 		String invoked = "";
-		JSONArray args = null;
+		String arg = null;
 		Object res = null;
+		
+
 		
 		for(Object var : vars){
 			
@@ -77,23 +81,25 @@ public class TestConfigReader {
 			System.out.println(name);
 			invoked = (String) obj.get("invoke");
 			System.out.println(invoked);
-			args = (JSONArray) obj.get("args");
-			System.out.println(args);
+			arg = (String) obj.get("arg");
+			System.out.println(arg);
 			
+			Invocable invocable = (Invocable) sengine;
+			try {
+				String args = (String) resultRegistry.get(arg);
+				res = invocable.invokeFunction(
+						invoked, args);
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (ScriptException e) {
+				e.printStackTrace();
+			}
+			resultRegistry.put(name, res);
+			System.out.println("Results : " + res);
 			
 		}
 		
-		Invocable invocable = (Invocable) sengine;
-		try {
-			res = invocable.invokeFunction(
-					invoked, args);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println(res);
+
 	}
 
 	private void importFiles(JSONArray files) {

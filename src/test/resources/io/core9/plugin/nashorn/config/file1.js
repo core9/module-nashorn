@@ -8,14 +8,13 @@
 	{
 		"name" : "tmp",
 		"invoke" : "test",
-		"args" : ["test"]
+		"arg" : "test"
 	}, {
 		"name" : "tmp3",
 		"invoke" : "test",
-		"args" : ["tmp"]
+		"arg" : "tmp"
 	} ] 
 }
 **/
 
 
-var test = "test";
