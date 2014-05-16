@@ -43,6 +43,9 @@ public class NashornDataHandlerImpl implements
 
 	@InjectPlugin
 	private MongoDatabase database;
+	
+	@InjectPlugin
+	private JavascriptModuleRegistry javascriptModuleRegistry; 
 
 	@InjectPlugin
 	private FileRepository repository;
