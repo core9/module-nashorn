@@ -1,10 +1,10 @@
 /**
 {
 	"include" : [
-	             "src/test/resources/io/core9/plugin/nashorn/config/file2.js",
-	             "src/test/resources/io/core9/plugin/nashorn/config/file3.js"
+	             "src/test/resources/io/core9/plugin/nashorn/config/mailerconfig.js"
 	             ],
 	"var" : [
+
 	{
 		"name" : "tmp",
 		"invoke" : "PH.test6",
@@ -16,6 +16,3 @@
 	} ] 
 }
 **/
-
-
-
