@@ -72,7 +72,7 @@ public class TestConfigReader {
 		Object res = null;
 		String invokeObject = "";
 		
-
+		Object object = null;
 		
 		for(Object var : vars){
 			
@@ -82,7 +82,7 @@ public class TestConfigReader {
 			System.out.println(name);
 			invoked = (String) obj.get("invoke");
 			
-			String[] invoke = invoked.split(".");
+			String[] invoke = invoked.split("\\.");
 			if(invoke.length > 1){
 				invokeObject = invoke[0];
 				invoked = invoke[1];
@@ -93,7 +93,7 @@ public class TestConfigReader {
 			System.out.println(arg);
 			
 			Invocable invocable = (Invocable) sengine;
-			Object object = null;
+			
 			if(invokeObject != null){
 				
 				try {
@@ -106,6 +106,8 @@ public class TestConfigReader {
 				res = invokeFunction(invoked, arg, res, invocable);
 			}
 			
+			invokeObject = null;
+			object = null;
 			
 			resultRegistry.put(name, res);
 			System.out.println("Results : " + res);
@@ -120,7 +122,12 @@ public class TestConfigReader {
 
 		try {
 			String args = (String) resultRegistry.get(arg);
-			res = invocable.invokeMethod(object, invoked, args);
+			if(args == null){
+				res = invocable.invokeMethod(object, invoked);
+			}else{
+				res = invocable.invokeMethod(object, invoked, args);
+			}
+			
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		} catch (ScriptException e) {
