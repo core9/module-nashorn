@@ -70,6 +70,7 @@ public class TestConfigReader {
 		String invoked = "";
 		String arg = null;
 		Object res = null;
+		String invokeObject = "";
 		
 
 		
@@ -80,26 +81,66 @@ public class TestConfigReader {
 			name = (String) obj.get("name");
 			System.out.println(name);
 			invoked = (String) obj.get("invoke");
+			
+			String[] invoke = invoked.split(".");
+			if(invoke.length > 1){
+				invokeObject = invoke[0];
+				invoked = invoke[1];
+			}
+			
 			System.out.println(invoked);
 			arg = (String) obj.get("arg");
 			System.out.println(arg);
 			
 			Invocable invocable = (Invocable) sengine;
-			try {
-				String args = (String) resultRegistry.get(arg);
-				res = invocable.invokeFunction(
-						invoked, args);
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (ScriptException e) {
-				e.printStackTrace();
+			Object object = null;
+			if(invokeObject != null){
+				
+				try {
+					object = sengine.eval(invokeObject);
+				} catch (ScriptException e) {
+					e.printStackTrace();
+				}
+				res = invokeFunctionOnObject(object, invoked, arg, res, invocable);
+			}else{
+				res = invokeFunction(invoked, arg, res, invocable);
 			}
+			
+			
 			resultRegistry.put(name, res);
 			System.out.println("Results : " + res);
 			
 		}
 		
 
+	}
+
+	private Object invokeFunctionOnObject(Object object, String invoked,
+			String arg, Object res, Invocable invocable) {
+
+		try {
+			String args = (String) resultRegistry.get(arg);
+			res = invocable.invokeMethod(object, invoked, args);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	private Object invokeFunction(String invoked, String arg, Object res,
+			Invocable invocable) {
+		try {
+			String args = (String) resultRegistry.get(arg);
+			res = invocable.invokeFunction(
+					invoked, args);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 
 	private void importFiles(JSONArray files) {

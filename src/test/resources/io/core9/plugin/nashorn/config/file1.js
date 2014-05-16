@@ -7,7 +7,7 @@
 	"var" : [ 
 	{
 		"name" : "tmp",
-		"invoke" : "test5",
+		"invoke" : "PH.test6",
 		"arg" : "test"
 	}, {
 		"name" : "tmp3",
