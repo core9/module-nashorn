@@ -16,7 +16,9 @@ public class JavascriptModuleRegistryImpl implements JavascriptModuleRegistry {
 
 	@Override
 	public void setModules(Map<String, JavascriptModule> modules) {
-		modules.putAll(modules);
+		if (modules != null) {
+			modules.putAll(modules);
+		}
 	}
 
 	@Override
