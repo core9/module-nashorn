@@ -1,4 +1,4 @@
-package io.core9.plugin.nashorn;
+package io.core9.plugin.javascript;
 
 import java.util.List;
 import org.apache.commons.lang3.ClassUtils;

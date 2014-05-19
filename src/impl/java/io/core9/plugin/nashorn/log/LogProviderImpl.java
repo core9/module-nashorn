@@ -1,7 +1,7 @@
 package io.core9.plugin.nashorn.log;
 
-import io.core9.plugin.nashorn.JavascriptModule;
-import io.core9.plugin.nashorn.JavascriptModuleImpl;
+import io.core9.plugin.javascript.JavascriptModule;
+import io.core9.plugin.javascript.JavascriptModuleImpl;
 
 import java.util.HashMap;
 import java.util.Map;

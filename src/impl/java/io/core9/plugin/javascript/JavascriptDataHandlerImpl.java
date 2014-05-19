@@ -1,9 +1,8 @@
-package io.core9.plugin.nashorn;
+package io.core9.plugin.javascript;
 
 import io.core9.plugin.admin.plugins.AdminConfigRepository;
 import io.core9.plugin.database.mongodb.MongoDatabase;
 import io.core9.plugin.filesmanager.FileRepository;
-import io.core9.plugin.javascript.JavascriptModuleRegistry;
 import io.core9.plugin.server.request.Request;
 import io.core9.plugin.server.vertx.VertxServer;
 import io.core9.plugin.widgets.datahandler.DataHandler;
@@ -33,8 +32,8 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.annotations.injections.InjectPlugin;
 
 @PluginImplementation
-public class NashornDataHandlerImpl implements
-		NashornDataHandler<NashornDataHandlerConfig> {
+public class JavascriptDataHandlerImpl implements
+		JavascriptDataHandler<JavascriptDataHandlerConfig> {
 
 	@InjectPlugin
 	private AdminConfigRepository configRepository;
@@ -63,14 +62,14 @@ public class NashornDataHandlerImpl implements
 
 	@Override
 	public Class<? extends DataHandlerFactoryConfig> getConfigClass() {
-		return NashornDataHandlerConfig.class;
+		return JavascriptDataHandlerConfig.class;
 	}
 
 	@SuppressWarnings("unused")
 	@Override
-	public DataHandler<NashornDataHandlerConfig> createDataHandler(
+	public DataHandler<JavascriptDataHandlerConfig> createDataHandler(
 			final DataHandlerFactoryConfig options) {
-		return new DataHandler<NashornDataHandlerConfig>() {
+		return new DataHandler<JavascriptDataHandlerConfig>() {
 
 			private String js;
 			private Object response;
@@ -191,8 +190,8 @@ public class NashornDataHandlerImpl implements
 			}
 
 			@Override
-			public NashornDataHandlerConfig getOptions() {
-				return (NashornDataHandlerConfig) options;
+			public JavascriptDataHandlerConfig getOptions() {
+				return (JavascriptDataHandlerConfig) options;
 			}
 		};
 	}

@@ -1,6 +1,6 @@
 package io.core9.plugin.nashorn.config;
 
-import io.core9.plugin.nashorn.JavascriptModule;
+import io.core9.plugin.javascript.JavascriptModule;
 
 import java.io.File;
 import java.io.IOException;

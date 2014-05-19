@@ -1,7 +1,7 @@
 package io.core9.plugin.nashorn.config;
 
 import net.minidev.json.JSONObject;
-import io.core9.plugin.nashorn.JavascriptModule;
+import io.core9.plugin.javascript.JavascriptModule;
 
 public class JavascriptMailerImpl implements JavascriptModule {
 

@@ -1,4 +1,4 @@
-package io.core9.plugin.nashorn;
+package io.core9.plugin.javascript;
 
 import java.util.HashMap;
 import java.util.Map;
