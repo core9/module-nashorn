@@ -1,5 +1,6 @@
 package io.core9.plugin.nashorn.config;
 
+import io.core9.plugin.javascript.ConfigReader;
 import io.core9.plugin.javascript.JavascriptModule;
 
 import java.io.File;
