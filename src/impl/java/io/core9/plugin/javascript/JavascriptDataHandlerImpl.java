@@ -85,7 +85,7 @@ public class JavascriptDataHandlerImpl implements
 					}
 				}
 
-				result.put("nashorn", nashorn);
+				result.put("javascript", nashorn);
 				return result;
 			}
 
