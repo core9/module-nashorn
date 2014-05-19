@@ -1,20 +1,14 @@
 package io.core9.plugin.javascript;
 
-import io.core9.plugin.admin.plugins.AdminConfigRepository;
-import io.core9.plugin.database.mongodb.MongoDatabase;
+
 import io.core9.plugin.filesmanager.FileRepository;
 import io.core9.plugin.server.request.Request;
 import io.core9.plugin.server.vertx.VertxServer;
 import io.core9.plugin.widgets.datahandler.DataHandler;
 import io.core9.plugin.widgets.datahandler.DataHandlerFactoryConfig;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -246,7 +240,7 @@ public class JavascriptDataHandlerImpl implements
 	private void importFiles(JSONArray files, Request req) {
 
 		for (Object file : files) {
-			String path = (String) file;
+
 
 
 			Map<String, Object> fileObj = repository.getFileContentsByName(
