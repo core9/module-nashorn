@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
@@ -34,12 +33,9 @@ public class JavascriptDataHandlerImpl implements
 		return "Javascript";
 	}
 
-	
 	private JavascriptExecutor jsExecutor = JavascriptExecutor.getInstance();
-	
+
 	private Map<String, Object> result = new HashMap<String, Object>();
-
-
 
 	@Override
 	public Class<? extends DataHandlerFactoryConfig> getConfigClass() {
@@ -52,19 +48,16 @@ public class JavascriptDataHandlerImpl implements
 			final DataHandlerFactoryConfig options) {
 		return new DataHandler<JavascriptDataHandlerConfig>() {
 
-			
-
 			@Override
 			public Map<String, Object> handle(Request req) {
 
-				
 				jsExecutor.setFileRepository(repository);
-				
+
 				JSONObject configuration = null;
 				Map<String, Object> nashorn = new HashMap<String, Object>();
 				Map<String, Object> file = getJsFile(options, req);
 				JSONObject server = jsExecutor.getServerObject();
-				 String js = jsExecutor.evalJavascript(file);
+				String js = jsExecutor.evalJavascript(file);
 
 				ConfigReader config = new ConfigReader();
 
@@ -75,11 +68,13 @@ public class JavascriptDataHandlerImpl implements
 					for (Entry<String, Object> param : configuration.entrySet()) {
 
 						if (param.getKey().equals("include")) {
-							jsExecutor.importFiles((JSONArray) param.getValue(), req);
+							jsExecutor.importFiles(
+									(JSONArray) param.getValue(), req);
 						}
 
 						if (param.getKey().equals("var")) {
-							nashorn = jsExecutor.execVars((JSONArray) param.getValue());
+							nashorn = jsExecutor.execVars((JSONArray) param
+									.getValue());
 						}
 
 					}
@@ -88,10 +83,6 @@ public class JavascriptDataHandlerImpl implements
 				result.put("javascript", nashorn);
 				return result;
 			}
-
-
-
-
 
 			private Map<String, Object> getJsFile(
 					final DataHandlerFactoryConfig options, Request req) {
@@ -105,9 +96,5 @@ public class JavascriptDataHandlerImpl implements
 			}
 		};
 	}
-	
-	
-	
 
-	
 }
