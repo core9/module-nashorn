@@ -20,6 +20,10 @@ task publishBintray (type: org._10ne.gradle.rest.RestTask, dependsOn: bintrayUpl
 }
 
 dependencies {
+
+	compile 'javax.mail:mail:+'
+	
+
 	apiCompile 'io.core9:core-api:+'
 	apiCompile 'io.core9:module-widgets-api:+'
 	implCompile 'io.core9:module-database-mongodb-api:+'
@@ -31,7 +35,7 @@ dependencies {
 	implCompile 'org.mongodb:casbah-commons_2.10:2.7.0-RC3'
 	implCompile 'org.mongodb:casbah-core_2.10:2.7.0-RC3'
 	implCompile 'com.ee.mongo.util:mongo-shell-like-query:1.0.1'
-	
+		
 	testCompile 'com.github.fakemongo:fongo:1.4.0'
 	testCompile 'ch.qos.logback:logback-classic:1.1.1'
 	

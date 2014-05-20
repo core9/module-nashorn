@@ -3,6 +3,8 @@ package io.core9.plugin.nashorn;
 import io.core9.plugin.admin.plugins.AdminConfigRepository;
 import io.core9.plugin.database.mongodb.MongoDatabase;
 import io.core9.plugin.filesmanager.FileRepository;
+import io.core9.plugin.javascript.JavascriptModule;
+import io.core9.plugin.javascript.JavascriptModuleRegistry;
 import io.core9.plugin.server.request.Request;
 import io.core9.plugin.server.vertx.VertxServer;
 import io.core9.plugin.widgets.datahandler.DataHandler;
@@ -43,6 +45,9 @@ public class NashornDataHandlerImpl implements
 
 	@InjectPlugin
 	private MongoDatabase database;
+	
+	@InjectPlugin
+	private JavascriptModuleRegistry javascriptModuleRegistry; 
 
 	@InjectPlugin
 	private FileRepository repository;
@@ -78,6 +83,9 @@ public class NashornDataHandlerImpl implements
 			@Override
 			public Map<String, Object> handle(Request req) {
 
+				
+				JavascriptModule modules = javascriptModuleRegistry.getModule("logger");
+				
 				Map<String, Object> nashorn = new HashMap<String, Object>();
 				Map<String, Object> file = getJsFile(options, req);
 				JSONObject server = getServerObject();

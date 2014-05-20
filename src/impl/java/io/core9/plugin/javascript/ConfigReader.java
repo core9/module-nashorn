@@ -1,4 +1,4 @@
-package io.core9.plugin.nashorn.config;
+package io.core9.plugin.javascript;
 
 
 import net.minidev.json.JSONObject;
@@ -30,7 +30,7 @@ public class ConfigReader {
 	}
 
 	private JSONObject extractConfig(String js) {
-		String[] lines = js.split(System.getProperty("line.separator"));
+		String[] lines = js.split("\\n");
 		String configString = "";
 		boolean config = false;
 
