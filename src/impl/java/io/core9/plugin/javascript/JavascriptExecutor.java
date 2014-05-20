@@ -15,6 +15,9 @@ import javax.script.ScriptException;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 
 import com.google.common.io.ByteStreams;
 
@@ -45,7 +48,7 @@ public class JavascriptExecutor {
 					.get("name");
 			String invokeMethod = (String) variableJsonObject.get("invoke");
 			String invokeModule = (String) variableJsonObject.get("module");
-			JSONObject jsonIn = (JSONObject) variableJsonObject.get("in");
+			String jsonIn = (String) variableJsonObject.get("in");
 
 			String invokeObject = "";
 
@@ -73,13 +76,22 @@ public class JavascriptExecutor {
 
 	}
 
-	private JSONObject invokeModule(String invokeModule, JSONObject jsonIn) {
+	private JSONObject invokeModule(String invokeModule, String jsonIn) {
 
 		JavascriptModule module = javascriptModuleRegistry
 				.getModule(invokeModule);
 		if (module != null) {
-			module.setJson(jsonIn);
+			if (JSONValue.isValidJsonStrict(jsonIn)) {
+				try {
+					module.setJson((JSONObject) JSONValue.parseStrict(jsonIn));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			} else {
+				module.setJson((JSONObject) resultRegistry.get(jsonIn));
+			}
 			return module.getJson();
+
 		} else {
 			return new JSONObject();
 		}
