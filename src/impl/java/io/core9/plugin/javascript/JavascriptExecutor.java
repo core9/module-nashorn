@@ -44,6 +44,13 @@ public class JavascriptExecutor {
 			String javascriptVariableName = (String) variableJsonObject.get("name");
 			String invokeMethod = (String) variableJsonObject.get("invoke");
 			String invokeObject = "";
+			
+			if(invokeMethod != null){
+				resultObject = invokeJavascript(resultObject, methodArgument,
+						invokeMethod, invokeObject);
+			}else{
+				resultObject = invokeModule();
+			}
 
 			String[] invoke = invokeMethod.split("\\.");
 			if (invoke.length > 1) {
@@ -52,19 +59,7 @@ public class JavascriptExecutor {
 			}
 
 			
-			if (invokeObject != "") {
-				Object javascriptObject = null;
-				try {
-					javascriptObject = sengine.eval(invokeObject);
-				} catch (ScriptException e) {
-					e.printStackTrace();
-				}
-				resultObject = invokeFunctionOnObject(javascriptObject,
-						invokeMethod, methodArgument, resultObject, invocable);
-			} else {
-				resultObject = invokeFunction(invokeMethod, methodArgument,
-						resultObject, invocable);
-			}
+
 
 			System.out.println(javascriptVariableName);
 			System.out.println(invokeMethod);
@@ -76,6 +71,29 @@ public class JavascriptExecutor {
 		}
 		return resultRegistry;
 
+	}
+
+	private Object invokeModule() {
+
+		return null;
+	}
+
+	private Object invokeJavascript(Object resultObject, String methodArgument,
+			String invokeMethod, String invokeObject) {
+		if (invokeObject != "") {
+			Object javascriptObject = null;
+			try {
+				javascriptObject = sengine.eval(invokeObject);
+			} catch (ScriptException e) {
+				e.printStackTrace();
+			}
+			resultObject = invokeFunctionOnObject(javascriptObject,
+					invokeMethod, methodArgument, resultObject, invocable);
+		} else {
+			resultObject = invokeFunction(invokeMethod, methodArgument,
+					resultObject, invocable);
+		}
+		return resultObject;
 	}
 
 	private JavascriptExecutor() {
