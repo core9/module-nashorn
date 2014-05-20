@@ -18,6 +18,7 @@ public class LoggerImpl implements JavascriptModule {
 
 	@Override
 	public JSONObject getJson() {
+		json.put("mmm", "rrrr");
 		return json;
 	}
 
