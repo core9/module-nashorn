@@ -1,7 +1,4 @@
-package io.core9.plugin.nashorn;
-
-import io.core9.plugin.javascript.JavascriptModule;
-import io.core9.plugin.javascript.JavascriptModuleRegistry;
+package io.core9.plugin.javascript;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +17,7 @@ public class JavascriptModuleRegistryImpl implements JavascriptModuleRegistry {
 	@Override
 	public void setModules(Map<String, JavascriptModule> modules) {
 		if (modules != null) {
-			this.modules.putAll(modules);
+			modules.putAll(modules);
 		}
 	}
 

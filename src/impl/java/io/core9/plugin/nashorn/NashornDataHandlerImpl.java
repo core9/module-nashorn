@@ -3,6 +3,8 @@ package io.core9.plugin.nashorn;
 import io.core9.plugin.admin.plugins.AdminConfigRepository;
 import io.core9.plugin.database.mongodb.MongoDatabase;
 import io.core9.plugin.filesmanager.FileRepository;
+import io.core9.plugin.javascript.JavascriptModule;
+import io.core9.plugin.javascript.JavascriptModuleRegistry;
 import io.core9.plugin.server.request.Request;
 import io.core9.plugin.server.vertx.VertxServer;
 import io.core9.plugin.widgets.datahandler.DataHandler;

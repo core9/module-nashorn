@@ -1,5 +1,7 @@
 package io.core9.plugin.nashorn.config;
 
+import io.core9.plugin.javascript.ConfigReader;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
