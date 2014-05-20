@@ -48,7 +48,8 @@ public class JavascriptExecutor {
 					.get("name");
 			String invokeMethod = (String) variableJsonObject.get("invoke");
 			String invokeModule = (String) variableJsonObject.get("module");
-			String jsonIn = (String) variableJsonObject.get("in");
+			Object jsonIn =  variableJsonObject.get("in");
+
 
 			String invokeObject = "";
 
@@ -76,14 +77,18 @@ public class JavascriptExecutor {
 
 	}
 
-	private JSONObject invokeModule(String invokeModule, String jsonIn) {
+	private JSONObject invokeModule(String invokeModule, Object jsonIn) {
 
+		if(jsonIn != null){
+			jsonIn = jsonIn.toString();
+		}
+		
 		JavascriptModule module = javascriptModuleRegistry
 				.getModule(invokeModule);
 		if (module != null) {
-			if (JSONValue.isValidJsonStrict(jsonIn)) {
+			if (JSONValue.isValidJsonStrict((String)jsonIn)) {
 				try {
-					module.setJson((JSONObject) JSONValue.parseStrict(jsonIn));
+					module.setJson((JSONObject) JSONValue.parseStrict((String)jsonIn));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
