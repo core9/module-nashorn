@@ -49,15 +49,16 @@ public class JavascriptDataHandlerImpl implements
 		return new DataHandler<JavascriptDataHandlerConfig>() {
 
 			@Override
-			public Map<String, Object> handle(Request req) {
+			public Map<String, Object> handle(Request request) {
 
 				jsExecutor.setFileRepository(repository);
+				jsExecutor.setJavascriptModuleRegistry(javascriptModuleRegistry);
 
 				JSONObject configuration = null;
 				Map<String, Object> nashorn = new HashMap<String, Object>();
-				Map<String, Object> file = getJsFile(options, req);
-				JSONObject server = jsExecutor.getServerObject();
-				String js = jsExecutor.evalJavascript(file);
+				Map<String, Object> file = getJavascriptFileFromMongoDb(options, request);
+				JSONObject server = jsExecutor.getServerObject(request);
+				String js = jsExecutor.evalJavascriptFromMongoDb(file);
 
 				ConfigReader config = new ConfigReader();
 
@@ -69,7 +70,7 @@ public class JavascriptDataHandlerImpl implements
 
 						if (param.getKey().equals("include")) {
 							jsExecutor.importFiles(
-									(JSONArray) param.getValue(), req);
+									(JSONArray) param.getValue(), request);
 						}
 
 						if (param.getKey().equals("var")) {
@@ -84,7 +85,7 @@ public class JavascriptDataHandlerImpl implements
 				return result;
 			}
 
-			private Map<String, Object> getJsFile(
+			private Map<String, Object> getJavascriptFileFromMongoDb(
 					final DataHandlerFactoryConfig options, Request req) {
 				return repository.getFileContentsByName(req.getVirtualHost(),
 						getOptions().getJsFile().substring(7));

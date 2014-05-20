@@ -20,32 +20,87 @@ import com.google.common.io.ByteStreams;
 
 public class JavascriptExecutor {
 
+	private static JavascriptExecutor instance; // needs vhost scope
 	private NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-	// secure
 	private ScriptEngine sengine = factory
 			.getScriptEngine(new String[] { "--no-java" });
+	private Invocable invocable = (Invocable) sengine;
 
 	private Map<String, Object> resultRegistry = new HashMap<>();
-	private static JavascriptExecutor instance;
-	private String js;
+
 	private FileRepository repository;
-	
-	public JSONObject getServerObject() {
-		JSONObject server = new JSONObject();
-		JSONObject request = new JSONObject();
-		request.put("path", "/nashorn");
-		server.put("request", request);
-		return server;
+	private JavascriptModuleRegistry javascriptModuleRegistry;
+
+	public Map<String, Object> execVars(JSONArray vars) {
+
+		Object resultObject = null;
+
+		System.out.println(vars);
+
+		for (Object var : vars) {
+
+			JSONObject variableJsonObject = (JSONObject) var;
+			String methodArgument = (String) variableJsonObject.get("arg");
+			String javascriptVariableName = (String) variableJsonObject.get("name");
+			String invokeMethod = (String) variableJsonObject.get("invoke");
+			String invokeObject = "";
+
+			String[] invoke = invokeMethod.split("\\.");
+			if (invoke.length > 1) {
+				invokeObject = invoke[0];
+				invokeMethod = invoke[1];
+			}
+
+			
+			if (invokeObject != "") {
+				Object javascriptObject = null;
+				try {
+					javascriptObject = sengine.eval(invokeObject);
+				} catch (ScriptException e) {
+					e.printStackTrace();
+				}
+				resultObject = invokeFunctionOnObject(javascriptObject,
+						invokeMethod, methodArgument, resultObject, invocable);
+			} else {
+				resultObject = invokeFunction(invokeMethod, methodArgument,
+						resultObject, invocable);
+			}
+
+			System.out.println(javascriptVariableName);
+			System.out.println(invokeMethod);
+			System.out.println(methodArgument);
+			System.out.println("Results : " + resultObject);
+
+			resultRegistry.put(javascriptVariableName, resultObject);
+
+		}
+		return resultRegistry;
+
 	}
 
-	public String evalJavascript(Map<String, Object> file) {
+	private JavascriptExecutor() {
+	}
+
+	public JSONObject getServerObject(Request request) {
+		JSONObject result = new JSONObject();
+		JSONObject requestJson = new JSONObject();
+		requestJson.put("path", "/nashorn");
+		result.put("request", requestJson);
+		return result;
+	}
+
+	public String evalJavascriptFromMongoDb(Map<String, Object> file) {
+		String js = null;
 		try {
 			js = new String(ByteStreams.toByteArray((InputStream) file
 					.get("stream")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return evalJavascript(js);
+	}
 
+	private String evalJavascript(String js) {
 		try {
 			sengine.eval(js);
 		} catch (ScriptException e) {
@@ -54,61 +109,7 @@ public class JavascriptExecutor {
 		return js;
 	}
 
-	public Map<String, Object> execVars(JSONArray vars) {
-		System.out.println(vars);
-		String name = "";
-		String invoked = "";
-		String arg = null;
-		Object res = null;
-		String invokeObject = "";
-
-		Object object = null;
-
-		for (Object var : vars) {
-
-			JSONObject obj = (JSONObject) var;
-
-			name = (String) obj.get("name");
-			System.out.println(name);
-			invoked = (String) obj.get("invoke");
-
-			String[] invoke = invoked.split("\\.");
-			if (invoke.length > 1) {
-				invokeObject = invoke[0];
-				invoked = invoke[1];
-			}
-
-			System.out.println(invoked);
-			arg = (String) obj.get("arg");
-			System.out.println(arg);
-
-			Invocable invocable = (Invocable) sengine;
-
-			if (invokeObject != null) {
-
-				try {
-					object = sengine.eval(invokeObject);
-				} catch (ScriptException e) {
-					e.printStackTrace();
-				}
-				res = invokeFunctionOnObject(object, invoked, arg, res,
-						invocable);
-			} else {
-				res = invokeFunction(invoked, arg, res, invocable);
-			}
-
-			invokeObject = null;
-			object = null;
-
-			resultRegistry.put(name, res);
-			System.out.println("Results : " + res);
-
-		}
-		return resultRegistry;
-
-	}
-
-	public Object invokeFunctionOnObject(Object object, String invoked,
+	private Object invokeFunctionOnObject(Object object, String invoked,
 			String arg, Object res, Invocable invocable) {
 		try {
 			String args = (String) resultRegistry.get(arg);
@@ -126,7 +127,7 @@ public class JavascriptExecutor {
 		return res;
 	}
 
-	public Object invokeFunction(String invoked, String arg, Object res,
+	private Object invokeFunction(String invoked, String arg, Object res,
 			Invocable invocable) {
 		try {
 			String args = (String) resultRegistry.get(arg);
@@ -141,7 +142,7 @@ public class JavascriptExecutor {
 
 	public void importFiles(JSONArray files, Request req) {
 		for (Object file : files) {
-			evalJavascript(repository.getFileContentsByName(
+			evalJavascriptFromMongoDb(repository.getFileContentsByName(
 					req.getVirtualHost(), (String) file));
 		}
 	}
@@ -155,6 +156,11 @@ public class JavascriptExecutor {
 
 	public void setFileRepository(FileRepository repository) {
 		this.repository = repository;
+	}
+
+	public void setJavascriptModuleRegistry(
+			JavascriptModuleRegistry javascriptModuleRegistry) {
+		this.javascriptModuleRegistry = javascriptModuleRegistry;
 	}
 
 }
