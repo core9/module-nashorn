@@ -96,11 +96,7 @@ public class JavascriptExecutor {
 			} else {
 				JSONObject test = new JSONObject();
 				try {
-					
-					Object tmp = resultRegistry.get(jsonIn);
-					String t = tmp.toString();
-					
-					test.put("result", tmp);
+					test.put("result", resultRegistry.get(jsonIn));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

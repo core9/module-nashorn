@@ -1,7 +1,6 @@
 package io.core9.plugin.nashorn.log;
 
 import io.core9.plugin.javascript.JavascriptModule;
-import io.core9.plugin.javascript.JavascriptModuleImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +16,7 @@ public class LogProviderImpl implements LogProvider {
 		
 		Map<String, JavascriptModule> modules = new HashMap<>();
 		
-		JavascriptModule logger = new JavascriptModuleImpl();
-		logger.setName("logger");
+		JavascriptModule logger = new LoggerImpl();
 		
 		modules.put(logger.getName(), logger);
 		
