@@ -81,6 +81,9 @@ public class NashornDataHandlerImpl implements
 			@Override
 			public Map<String, Object> handle(Request req) {
 
+				
+				JavascriptModule modules = javascriptModuleRegistry.getModule("logger");
+				
 				Map<String, Object> nashorn = new HashMap<String, Object>();
 				Map<String, Object> file = getJsFile(options, req);
 				JSONObject server = getServerObject();
