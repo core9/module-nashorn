@@ -5,7 +5,6 @@ import io.core9.plugin.server.request.Request;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,6 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
-import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
 import com.google.common.io.ByteStreams;

@@ -12,6 +12,7 @@ import org.junit.Test;
 public class TestLogger {
 	
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void testLogger(){
 		
