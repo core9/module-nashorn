@@ -41,25 +41,25 @@ public class JavascriptExecutor {
 
 			JSONObject variableJsonObject = (JSONObject) var;
 			String methodArgument = (String) variableJsonObject.get("arg");
-			String javascriptVariableName = (String) variableJsonObject.get("name");
+			String javascriptVariableName = (String) variableJsonObject
+					.get("name");
 			String invokeMethod = (String) variableJsonObject.get("invoke");
+			String invokeModule = (String) variableJsonObject.get("module");
+			JSONObject jsonIn = (JSONObject) variableJsonObject.get("in");
+
 			String invokeObject = "";
-			
-			if(invokeMethod != null){
+
+			if (invokeMethod != null) {
+				String[] invoke = invokeMethod.split("\\.");
+				if (invoke.length > 1) {
+					invokeObject = invoke[0];
+					invokeMethod = invoke[1];
+				}
 				resultObject = invokeJavascript(resultObject, methodArgument,
 						invokeMethod, invokeObject);
-			}else{
-				resultObject = invokeModule();
+			} else {
+				resultObject = invokeModule(invokeModule, jsonIn);
 			}
-
-			String[] invoke = invokeMethod.split("\\.");
-			if (invoke.length > 1) {
-				invokeObject = invoke[0];
-				invokeMethod = invoke[1];
-			}
-
-			
-
 
 			System.out.println(javascriptVariableName);
 			System.out.println(invokeMethod);
@@ -73,9 +73,17 @@ public class JavascriptExecutor {
 
 	}
 
-	private Object invokeModule() {
+	private JSONObject invokeModule(String invokeModule, JSONObject jsonIn) {
 
-		return null;
+		JavascriptModule module = javascriptModuleRegistry
+				.getModule(invokeModule);
+		if (module != null) {
+			module.setJson(jsonIn);
+			return module.getJson();
+		} else {
+			return new JSONObject();
+		}
+
 	}
 
 	private Object invokeJavascript(Object resultObject, String methodArgument,
