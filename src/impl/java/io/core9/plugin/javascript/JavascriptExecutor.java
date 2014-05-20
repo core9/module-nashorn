@@ -5,6 +5,7 @@ import io.core9.plugin.server.request.Request;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,7 +94,18 @@ public class JavascriptExecutor {
 					e.printStackTrace();
 				}
 			} else {
-				module.setJson((JSONObject) resultRegistry.get(jsonIn));
+				JSONObject test = new JSONObject();
+				try {
+					
+					Object tmp = resultRegistry.get(jsonIn);
+					String t = tmp.toString();
+					
+					test.put("result", tmp);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				module.setJson(test);
 			}
 			return module.getJson();
 
