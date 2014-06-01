@@ -33,7 +33,7 @@ public class TestLogger {
 			
 			module.setJson(json);
 			
-			@SuppressWarnings("unused")
+			
 			JSONObject result = module.getJson();
 			
 			
