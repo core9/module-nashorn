@@ -1,8 +1,8 @@
 package io.core9.plugin.javascript;
 
 import io.core9.plugin.filesmanager.FileRepository;
+import io.core9.plugin.server.Server;
 import io.core9.plugin.server.request.Request;
-import io.core9.plugin.server.vertx.VertxServer;
 import io.core9.plugin.widgets.datahandler.DataHandler;
 import io.core9.plugin.widgets.datahandler.DataHandlerFactoryConfig;
 
@@ -20,7 +20,7 @@ public class JavascriptDataHandlerImpl implements
 		JavascriptDataHandler<JavascriptDataHandlerConfig> {
 
 	@InjectPlugin
-	private VertxServer server;
+	private Server server;
 
 	@InjectPlugin
 	private JavascriptModuleRegistry javascriptModuleRegistry;
